@@ -12,26 +12,17 @@ catch e
 Meteor.startup ->
   return if not cluster.isMaster
   if Foreach.databaseReset
-    ### TODO this will delete the database; ensure there's no issue, or better find another algorithm ###
-    promise = Foreach.buildSchema([])
-    .then Meteor.bindEnvironment ->
-      Foreach.loadFixtures([])
-  else
-    promise = Promise.resolve()
-  promise
-  .then Meteor.bindEnvironment ->
-    Foreach.migrate()
-  .then Meteor.bindEnvironment ->
-    return unless Meteor.settings.public.isDebug
-    return unless Meteor.settings.local?.autorun?.isEnabled
-    Jobs.remove({})
-    step = Steps.findOne(Meteor.settings.local.autorun.selectors.step)
-    user = Meteor.users.findOne(Meteor.settings.local.autorun.selectors.user)
-    Commands.insert(
-      isDryRun: true
-      stepId: step._id
-      userId: user._id
-    )
+    Foreach.loadFixtures([])
+  Foreach.migrate()
+  return unless Meteor.settings.public.isDebug
+  return unless Meteor.settings.local?.autorun?.isEnabled
+  step = Steps.findOne(Meteor.settings.local.autorun.selectors.step)
+  user = Meteor.users.findOne(Meteor.settings.local.autorun.selectors.user)
+  Commands.insert(
+    isDryRun: true
+    stepId: step._id
+    userId: user._id
+  )
 
 process.on "SIGUSR2", Meteor.bindEnvironment ->
   return if not cluster.isMaster
@@ -42,7 +33,5 @@ process.on "SIGUSR2", Meteor.bindEnvironment ->
     return if err.code is "ENOENT"
   reloadedCollectionNames = _.compact(fs.readFileSync(filename).toString().split("\n"))
   console.info("Reloading fixtures for " + if reloadedCollectionNames.length then reloadedCollectionNames.join(", ") else "all collections")
-  Foreach.buildSchema(reloadedCollectionNames)
-  .then Meteor.bindEnvironment ->
-    Foreach.loadFixtures(reloadedCollectionNames)
-    Foreach.migrate()
+  Foreach.loadFixtures(reloadedCollectionNames)
+  Foreach.migrate()

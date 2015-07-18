@@ -1,10 +1,10 @@
-pack = Pack.call("getFixtures") or {}
-_.extend(Foreach.fixtureApps, pack.apps or {})
-_.extend(Foreach.fixtureBlueprints, pack.blueprints or {})
-_.extend(Foreach.fixtureRecipes, pack.recipes or {})
-_.extend(Foreach.fixtureSteps, pack.steps or {})
-
 Foreach.loadFixtures = (reloadedCollectionNames) ->
+  pack = Pack.call("getFixtures") or {}
+  _.extend(Foreach.fixtureApps, pack.apps or {})
+  _.extend(Foreach.fixtureBlueprints, pack.blueprints or {})
+  _.extend(Foreach.fixtureRecipes, pack.recipes or {})
+  _.extend(Foreach.fixtureSteps, pack.steps or {})
+
   now = new Date()
   lastWeek = new Date(now.getTime() - 7 * 24 * 3600 * 1000)
 
@@ -47,43 +47,6 @@ Foreach.loadFixtures = (reloadedCollectionNames) ->
       hashedToken: Accounts._hashLoginToken(userId),
       when: now
     }}})
-
-  filters =
-    listFilter:
-      field: "idList"
-      operator: "is"
-#      value: "Doing"
-      andGroupId: 1
-      userId: "ArunodaSusiripala"
-    membersFilter:
-      field: "idMembers"
-      operator: "is"
-#      value: "Brad Pitt"
-      andGroupId: 2
-      userId: "ArunodaSusiripala"
-    dueDateFilter:
-      field: "due"
-      operator: "isBetween"
-      valueFrom: "01/14/2015"
-      valueTo: "01/20/2015"
-      andGroupId: 1
-      userId: "ArunodaSusiripala"
-  insertData(_.extend(filters, pack.filters or {}), TrelloFilters, reloadedCollectionNames)
-
-  votes =
-    "500pxSetLicenseFirst":
-      appId: "500px"
-      action: "set-license"
-      userId: "DenisGorbachev"
-    "500pxDeleteFirst":
-      appId: "500px"
-      action: "delete"
-      userToken: "token_J7H9PNSNPQL5jymRx"
-    "500pxDeleteSecond":
-      appId: "500px"
-      action: "delete"
-      userToken: "token_8ZK3694dmtz4xPvTF"
-  insertData(_.extend(votes, pack.votes or {}), Votes, reloadedCollectionNames)
 
   serviceConfigurations = {}
   if Meteor.settings.public.google
