@@ -16,18 +16,6 @@ Pack.call("preRouting")
 FlowRouter.notFound = action: -> FlowLayout.render "layout", content: "notFound"
 
 FlowRouter.route "/",
-  name: "index"
-  triggersEnter: [
-    (context, redirect) ->
-      $('.modal-backdrop').remove();
-      redirect(Pack.get("homeUrl") or "/Trello")
-  ]
-
-FlowRouter.route "/pricing", triggersEnter: (context, redirect) -> redirect("/pricing/per/month")
-FlowRouter.route "/pricing/per/:period", action: -> FlowLayout.render "layout", content: "pricing"
-FlowRouter.route "/disclaimer", action: -> FlowLayout.render "layout", content: "disclaimer"
-
-FlowRouter.route "/apps",
   triggersEnter: [
     (context, redirect) ->
       selector = Pack.call("getAppsSelector") or {}
@@ -36,7 +24,11 @@ FlowRouter.route "/apps",
   ]
   action: -> FlowLayout.render "layout", content: "apps"
 
-SecureFlowRouter.route "/dashboard", action: -> FlowLayout.render "layout", content: "dashboard"
+FlowRouter.route "/pricing", triggersEnter: (context, redirect) -> redirect("/pricing/per/month")
+FlowRouter.route "/pricing/per/:period", action: -> FlowLayout.render "layout", content: "pricing"
+FlowRouter.route "/disclaimer", action: -> FlowLayout.render "layout", content: "disclaimer"
+
+SecureFlowRouter.route "/autorun", action: -> FlowLayout.render "layout", content: "dashboard"
 SecureFlowRouter.route "/stats", action: -> FlowLayout.render "layout", content: "stats"
 SecureFlowRouter.route "/health", action: -> FlowLayout.render "layout", content: "health"
 SecureFlowRouter.route "/iframe/:appKey", action: -> FlowLayout.render "layout", content: "iframe"
