@@ -33,7 +33,7 @@ Foreach.loadFixtures = (reloadedCollectionNames) ->
       isAliasedByMixpanel: true
       emails: [
         {
-          address: _id.toLowerCase() + "@foreach.io"
+          address: _id.toLowerCase() + "@fixin.io"
           verified: true
         }
       ]
