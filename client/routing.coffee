@@ -13,7 +13,7 @@ SecureFlowRouter = FlowRouter.group
 
 Pack.call("preRouting")
 
-FlowRouter.notFound = action: -> FlowLayout.render "layout", content: "notFound"
+FlowRouter.notFound = action: -> BlazeLayout.render "layout", content: "notFound"
 
 FlowRouter.route "/",
   triggersEnter: [
@@ -22,16 +22,16 @@ FlowRouter.route "/",
       cursor = Apps.find(selector)
       redirect(cursor.fetch()[0].url()) if cursor.count() is 1 # pack has only one app, redirect to its recipes at once
   ]
-  action: -> FlowLayout.render "layout", content: "apps"
+  action: -> BlazeLayout.render "layout", content: "apps"
 
 FlowRouter.route "/pricing", triggersEnter: (context, redirect) -> redirect("/pricing/per/month")
-FlowRouter.route "/pricing/per/:period", action: -> FlowLayout.render "layout", content: "pricing"
-FlowRouter.route "/disclaimer", action: -> FlowLayout.render "layout", content: "disclaimer"
+FlowRouter.route "/pricing/per/:period", action: -> BlazeLayout.render "layout", content: "pricing"
+FlowRouter.route "/disclaimer", action: -> BlazeLayout.render "layout", content: "disclaimer"
 
-SecureFlowRouter.route "/autorun", action: -> FlowLayout.render "layout", content: "dashboard"
-SecureFlowRouter.route "/stats", action: -> FlowLayout.render "layout", content: "stats"
-SecureFlowRouter.route "/health", action: -> FlowLayout.render "layout", content: "health"
-SecureFlowRouter.route "/iframe/:appKey", action: -> FlowLayout.render "layout", content: "iframe"
+SecureFlowRouter.route "/autorun", action: -> BlazeLayout.render "layout", content: "dashboard"
+SecureFlowRouter.route "/stats", action: -> BlazeLayout.render "layout", content: "stats"
+SecureFlowRouter.route "/health", action: -> BlazeLayout.render "layout", content: "health"
+SecureFlowRouter.route "/iframe/:appKey", action: -> BlazeLayout.render "layout", content: "iframe"
 
 SecureFlowRouter.route "/autologin/:token",
   triggersEnter: (context, redirect) ->
@@ -41,15 +41,15 @@ SecureFlowRouter.route "/autologin/:token",
 
 FlowRouter.route "/:appKey",
   triggersEnter: [setAppTitle]
-  action: -> FlowLayout.render "layout", content: "app"
+  action: -> BlazeLayout.render "layout", content: "app"
 
 FlowRouter.route "/:appKey/:blueprintKey",
   triggersEnter: [setAppTitle]
-  action: -> FlowLayout.render "layout", content: "blueprintTeaser"
+  action: -> BlazeLayout.render "layout", content: "blueprintTeaser"
 
 SecureFlowRouter.route "/:appKey/:blueprintKey/:recipeId",
   triggersEnter: [setAppTitle]
-  action: -> FlowLayout.render "layout", content: "recipe"
+  action: -> BlazeLayout.render "layout", content: "recipe"
 
 #if Meteor.settings.public.isMaintenance
 #  Router.onBeforeAction ->
