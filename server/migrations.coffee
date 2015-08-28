@@ -7,8 +7,6 @@ Meteor.startup ->
     Migrations.add(migration)
 
 Foreach.migrate = ->
-  cluster = Npm.require('cluster')
-  return if not cluster.isMaster
   version = Migrations._list.length - 1
   control = Migrations._collection.findOne("control")
   if not control # don't run migrations if they haven't run before (e.g. dev environment or new prod installation)

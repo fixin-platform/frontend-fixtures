@@ -1,10 +1,10 @@
 fs = Npm.require('fs')
-cluster = Npm.require('cluster')
+
+Foreach.databaseReset = not Migrations._collection.findOne("control")
 
 Meteor.startup ->
-  return if not cluster.isMaster
   if Foreach.databaseReset
-    Foreach.loadFixtures([])
+    Fixtures.load([])
   Foreach.migrate()
   return unless Meteor.settings.public.isDebug
   return unless Meteor.settings.autorun?.isEnabled
@@ -17,7 +17,6 @@ Meteor.startup ->
   )
 
 process.on "SIGUSR2", Meteor.bindEnvironment ->
-  return if not cluster.isMaster
   filename = "/tmp/meteorReloadedCollectionNames"
   try
     fs.statSync(filename)
@@ -25,5 +24,5 @@ process.on "SIGUSR2", Meteor.bindEnvironment ->
     return if err.code is "ENOENT"
   reloadedCollectionNames = _.compact(fs.readFileSync(filename).toString().split("\n"))
   console.info("Reloading fixtures for " + if reloadedCollectionNames.length then reloadedCollectionNames.join(", ") else "all collections")
-  Foreach.loadFixtures(reloadedCollectionNames)
+  Fixtures.load(reloadedCollectionNames)
   Foreach.migrate()

@@ -31,11 +31,6 @@ Package.onUse(function(api) {
   ]);
   api.export([
     "Migrations",
-    "syncAppsAndBlueprintsWithFixtures"
+    "Fixtures"
   ], ["server"])
 });
-
-Npm.depends({
-  "simple-rate-limiter": "0.2.2"
-});
-
