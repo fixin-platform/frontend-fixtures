@@ -6,7 +6,7 @@ Meteor.startup ->
   for migration in Migrations
     Migrations.add(migration)
 
-Foreach.migrate = ->
+Spire.migrate = ->
   version = Migrations._list.length - 1
   control = Migrations._collection.findOne("control")
   if not control # don't run migrations if they haven't run before (e.g. dev environment or new prod installation)

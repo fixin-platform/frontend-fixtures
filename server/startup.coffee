@@ -1,11 +1,11 @@
 fs = Npm.require('fs')
 
-Foreach.databaseReset = not Migrations._collection.findOne("control")
+Spire.databaseReset = not Migrations._collection.findOne("control")
 
 Meteor.startup ->
-  if Foreach.databaseReset
+  if Spire.databaseReset
     Fixtures.load([])
-  Foreach.migrate()
+  Spire.migrate()
   return unless Meteor.settings.public.isDebug
   return unless Meteor.settings.autorun?.isEnabled
   step = Steps.findOne(Meteor.settings.autorun.selectors.step)
@@ -25,4 +25,4 @@ process.on "SIGUSR2", Meteor.bindEnvironment ->
   reloadedCollectionNames = _.compact(fs.readFileSync(filename).toString().split("\n"))
   console.info("Reloading fixtures for " + if reloadedCollectionNames.length then reloadedCollectionNames.join(", ") else "all collections")
   Fixtures.load(reloadedCollectionNames)
-  Foreach.migrate()
+  Spire.migrate()

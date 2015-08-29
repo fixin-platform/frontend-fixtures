@@ -1,6 +1,6 @@
 syncAppsAndBlueprintsWithFixtures = ->
   fixtureAppId2AppId = {}
-  for fixtureappId, fixtureApp of Foreach.fixtureApps
+  for fixtureappId, fixtureApp of Spire.fixtureApps
     app = Apps.findOne({key: fixtureApp.key})
     if app
       l("Apps:sync", {operation: "update", key: fixtureApp.key})
@@ -11,9 +11,9 @@ syncAppsAndBlueprintsWithFixtures = ->
       _id = Apps.insert(fixtureApp)
     fixtureAppId2AppId[fixtureappId] = _id
   position = 1
-  for fixtureActionId, fixtureAction of Foreach.fixtureBlueprints
+  for fixtureActionId, fixtureAction of Spire.fixtureBlueprints
     fixtureAction.position = position++
-  for fixtureappId, fixtureBlueprints of _.groupBy(_.values(Foreach.fixtureBlueprints), "appId")
+  for fixtureappId, fixtureBlueprints of _.groupBy(_.values(Spire.fixtureBlueprints), "appId")
     appId = fixtureAppId2AppId[fixtureappId]
     throw "Couldn't find appId by fixtureappId: \"#{fixtureappId}\"" unless appId
     for fixtureBlueprint in fixtureBlueprints
