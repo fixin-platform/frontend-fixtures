@@ -4,7 +4,9 @@ Spire.databaseReset = not Migrations._collection.findOne("control")
 
 Meteor.startup ->
   if Spire.databaseReset
-    Fixtures.load([])
+    Fixtures.insertAll([])
+  else
+    Fixtures.ensureAll(["Pages"])
   Spire.migrate()
   return unless Meteor.settings.public.isDebug
   return unless Meteor.settings.autorun?.isEnabled
@@ -24,5 +26,5 @@ process.on "SIGUSR2", Meteor.bindEnvironment ->
     return if err.code is "ENOENT"
   reloadedCollectionNames = _.compact(fs.readFileSync(filename).toString().split("\n"))
   console.info("Reloading fixtures for " + if reloadedCollectionNames.length then reloadedCollectionNames.join(", ") else "all collections")
-  Fixtures.load(reloadedCollectionNames)
+  Fixtures.insertAll(reloadedCollectionNames)
   Spire.migrate()

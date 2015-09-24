@@ -23,7 +23,7 @@ Fixtures =
       collection: collection
       handler: handler
 
-  load: (reloadedCollectionNames) ->
+  insertAll: (reloadedCollectionNames) ->
     for bucket in @buckets
       hook.handler(bucket.objects) for hook in @preHooks when hook.collection is bucket.collection
       @insert(bucket.objects, bucket.collection, reloadedCollectionNames)
@@ -37,3 +37,15 @@ Fixtures =
       object._id = _id
       collection.insert(object)
 
+  ensureAll: (collectionNames) ->
+    for bucket in @buckets
+      @ensure(bucket.objects, bucket.collection, collectionNames)
+
+  ensure: (objects, collection, collectionNames = []) ->
+    return [] if collection._name not in collectionNames
+    for _id, object of objects
+      if collection.findOne(_id) # using manual "upsert" to trigger the hooks
+        collection.update(_id, {$set: object})
+      else
+        object._id = _id
+        collection.insert(object)
